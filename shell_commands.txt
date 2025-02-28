@@ -1,0 +1,71 @@
+>>> from news.models import *
+>>> u1 = User.objects.create_user(username='Zlata')
+>>> u2 = User.objects.create_user(username='Vladislav')
+>>> Author.objects.create(authorUser=u1)
+<Author: Author object (1)>
+>>> Author.objects.create(authorUser=u2)
+<Author: Author object (2)>
+>>> Category.objects.create(name_category='Sport')
+<Category: Category object (1)>
+>>> Category.objects.create(name_category='Politics')
+<Category: Category object (2)>
+>>> Category.objects.create(name_category='Education')  
+<Category: Category object (3)>
+>>> Category.objects.create(name_category='IT')
+<Category: Category object (4)>
+>>> author = Author.objects.get(id=1) 
+>>> author2 = Author.objects.get(id=2)
+>>> Post.objects.create(author=author, publication='NW', title='News title 1', text='some text for first new') 
+<Post: Post object (1)>
+>>> Post.objects.create(author=author, publication='AR', title='Articles title 1', text='some text for first article') 
+<Post: Post object (2)>
+>>> Post.objects.create(author=author2, publication='AR', title='Articles title 2', text='some text for second article')
+<Post: Post object (3)>
+>>> Post.objects.get(id=1).post_category.add(Category.objects.get(id=2))
+>>> Post.objects.get(id=1).post_category.add(Category.objects.get(id=4)) 
+>>> Post.objects.get(id=2).post_category.add(Category.objects.get(id=3))
+>>> Post.objects.get(id=2).post_category.add(Category.objects.get(id=4))
+>>> Post.objects.get(id=3).post_category.add(Category.objects.get(id=1))
+>>> Post.objects.get(id=3).post_category.add(Category.objects.get(id=3))
+>>> Comment.objects.create(comment_post=Post.objects.get(id=1), comment_user=Author.objects.get(id=1).authorUser,text='text by author')
+<Comment: Comment object (1)>
+>>> Comment.objects.create(comment_post=Post.objects.get(id=2), comment_user=Author.objects.get(id=1).authorUser,text='text by author')
+<Comment: Comment object (2)>
+>>> Comment.objects.create(comment_post=Post.objects.get(id=3), comment_user=Author.objects.get(id=1).authorUser,text='text by author')
+<Comment: Comment object (3)>
+>>> Comment.objects.create(comment_post=Post.objects.get(id=3), comment_user=Author.objects.get(id=2).authorUser,text='text by another author')
+<Comment: Comment object (4)>
+>>> Comment.objects.get(id=1).like()
+>>> Comment.objects.get(id=2).like()
+>>> Comment.objects.get(id=2).like()
+>>> Comment.objects.get(id=3).dislike()
+>>> Comment.objects.get(id=3).like()
+>>> Comment.objects.get(id=4).like()
+>>> Comment.objects.get(id=4).like()
+>>> Comment.objects.get(id=4).like()
+>>> Comment.objects.get(id=4).like()
+>>> Post.objects.get(id=1).like()
+>>> Post.objects.get(id=2).like() 
+>>> Post.objects.get(id=3).like()
+>>> Post.objects.get(id=3).like()
+>>> Post.objects.get(id=3).dislike()
+>>> Post.objects.get(id=3).like()
+>>> a = Author.objects.get(id=1)
+>>> a.update_rating()
+>>> a.authorRating
+9
+>>> b = Author.objects.get(id=2)
+>>> b.update_rating()
+>>> b.authorRating 
+10
+>>> bestuser = Author.objects.order_by('-authorRating')[0:1].values('authorUser__username', 'authorRating')
+>>> bestuser
+<QuerySet [{'authorUser__username': 'Vladislav', 'authorRating': 10}]>
+>>> bestPost = Post.objects.order_by('-rating')[0:1].values('date_creation','author__authorUser__username','rating', 'title')
+>>> bestPost
+<QuerySet [{'date_creation': datetime.datetime(2025, 2, 28, 21, 58, 5, 991244, tzinfo=datetime.timezone.utc), 'author__authorUser__username': 'Vladislav', 'rating': 2, 'title': 'Articles title 2'}]>
+>>> Post.objects.order_by('-rating')[0].preview()
+'some text for second article...'
+>>> commentPost = Post.objects.order_by('-rating')[0].comment_set.all().values('date_creation', 'comment_user__username', 'rating', 'text')
+>>> commentPost
+<QuerySet [{'date_creation': datetime.datetime(2025, 2, 28, 21, 59, 37, 746552, tzinfo=datetime.timezone.utc), 'comment_user__username': 'Zlata', 'rating': 0, 'text': 'text by author'}, {'date_creation': datetime.datetime(2025, 2, 28, 21, 59, 43, 846022, tzinfo=datetime.timezone.utc), 'comment_user__username': 'Vladislav', 'rating': 4, 'text': 'text by another author'}]>
