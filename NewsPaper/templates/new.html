@@ -1,0 +1,17 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+Объявление
+{% endblock title %}
+
+{% load custom_filters %}
+
+{% block content %}
+<h1>{{ new }}</h1>
+<h3>{{ new.date_creation|date:'d M Y' }}</h3>
+<hr>
+<h2>{{ new.text|censor }}</h2>
+
+<hr>
+
+{% endblock content %}
