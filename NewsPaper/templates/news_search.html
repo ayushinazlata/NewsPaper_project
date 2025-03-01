@@ -1,0 +1,63 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+    Поиск публикаций
+{% endblock title %}
+
+{% block content %}
+<h1>◄ ПОИСК ПУБЛИКАЦИЙ ►</h1>
+<h6><i>Вы видите {{ news|length }} из {{ paginator.count }} публикаций на нашем Новостном портале!</i></h6>
+<hr>
+
+<form method="get">
+    {{ filterset.form.as_p }}
+    <button type="submit">Искать</button>
+</form>
+
+<hr>
+
+{% if news %}
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>Тип</th>
+            <th>Заголовок</th>
+            <th>Дата</th>
+            <th>Текст</th>
+        </tr>
+        {% for new in news %}
+        <tr>
+            <td>{{ new.get_publication_display }}</td>
+            <td>{{ new.title|censor }}</td>
+            <td>{{ new.date_creation|date:"d M Y" }}</td>
+            <td>{{ new.text|truncatewords:20|censor }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h2>Публикации не найдены!</h2>
+{% endif %}
+
+<hr>
+
+{# Пагинация с сохранением параметров фильтрации #}
+{% if page_obj.has_previous %}
+    <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page=1">1</a>
+    {% if page_obj.previous_page_number != 1 %}
+        ...
+        <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+    {% endif %}
+{% endif %}
+
+{{ page_obj.number }}
+
+{% if page_obj.has_next %}
+    <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+    {% if page_obj.next_page_number != paginator.num_pages %}
+        ...
+        <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ paginator.num_pages }}">{{ paginator.num_pages }}</a>
+    {% endif %}
+{% endif %}
+
+{% endblock content %}

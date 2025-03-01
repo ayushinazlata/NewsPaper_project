@@ -10,27 +10,56 @@
 
 
 {% block content %}
-<h1>Все объявления</h1>
-Количество объявлений: {{ news|length }}
-
+<h1>◄ ВСЕ ОБЪЯВЛЕНИЯ ►</h1>
+<h6><i>Вы видите {{ news|length }} из {{ paginator.count }} объявлений на нашем Новостном портале! </i></h6>
+<hr>
 {% if news %}
     <table>
-        <tr>
-            <td>Заголовок</td>
-            <td>Дата публикации</td>
-            <td>Текст</td>
-        </tr>
+           <tr>
+               <td>Тип публикации</td>
+               <td>Заголовок</td>
+               <td>Дата публикации</td>
+               <td>Текст</td>
+           </tr>
 
-        {% for new in news %}
-        <tr>
-            <td>{{ new.title|censor }}</td>
-            <td>{{ new.date_creation|date:'d M Y' }}</td>
-            <td>{{ new.text|truncatewords:20|censor }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+           {% for new in news %}
+           <tr>
+               <td>{{ new.get_publication_display }}</td>
+               <td>{{ new.title|censor }}</td>
+               <td>{{ new.date_creation|date:'d M Y' }}</td>
+               <td>{{ new.text|truncatewords:20|censor }}</td>
+           </tr>
+           {% endfor %}
+
+       </table>
 {% else %}
-    <h2>Объявлений не найдено!</h2>
-{% endif %}
+    <h2>Объявления не найдены!</h2>
+   {% endif %}
+
+
+   <hr>
+  
+{# Добавляем пагинацию на страницу #}
+
+   {# Информация о предыдущих страницах #}
+   {% if page_obj.has_previous %}
+       <a href="?page=1">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {# Информация о текущей странице #}
+   {{ page_obj.number }}
+
+   {# Информация о следующих страницах #}
+   {% if page_obj.has_next %}
+       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
 
 {% endblock content %}

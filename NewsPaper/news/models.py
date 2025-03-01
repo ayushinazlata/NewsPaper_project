@@ -1,10 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
+from django.urls import reverse
 
 
 class Author(models.Model):
-    authorUser = models.OneToOneField(User, on_delete=models.CASCADE)
+    authorUser = models.OneToOneField(User, on_delete=models.CASCADE, related_name='author')
     authorRating = models.SmallIntegerField(default=0)
 
     def update_rating(self):
@@ -60,6 +61,9 @@ class Post(models.Model):
     
     def __str__(self):
         return f'{self.title}'
+    
+    def get_absolute_url(self):
+        return reverse('news_list')
 
 
 class PostCategory(models.Model):
