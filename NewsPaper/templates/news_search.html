@@ -19,7 +19,7 @@
 <hr>
 
 {% if news %}
-    <table border="1" cellpadding="5">
+    <table>
         <tr>
             <th>Тип</th>
             <th>Заголовок</th>
@@ -29,7 +29,9 @@
         {% for new in news %}
         <tr>
             <td>{{ new.get_publication_display }}</td>
-            <td>{{ new.title|censor }}</td>
+            <td>
+                <a class="nav-link" href="{% url 'new_detail' new.id %}">{{ new.title|censor }}</a>
+            </td>
             <td>{{ new.date_creation|date:"d M Y" }}</td>
             <td>{{ new.text|truncatewords:20|censor }}</td>
         </tr>

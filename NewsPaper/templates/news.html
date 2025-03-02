@@ -12,20 +12,32 @@
 {% block content %}
 <h1>◄ ВСЕ ОБЪЯВЛЕНИЯ ►</h1>
 <h6><i>Вы видите {{ news|length }} из {{ paginator.count }} объявлений на нашем Новостном портале! </i></h6>
+
 <hr>
+{% if request.user.is_authenticated %}
+    {% if is_author %}
+        <h5>Вы автор</h5>
+        {% else %}
+        <p class="text-center"><a href="{% url 'upgrade_user' %}" class="btn btn-secondary btn-sm">Стать автором</a></p>
+        {% endif %}
+{% endif %}
+
+
 {% if news %}
     <table>
            <tr>
-               <td>Тип публикации</td>
-               <td>Заголовок</td>
-               <td>Дата публикации</td>
-               <td>Текст</td>
+               <th>Тип публикации</th>
+               <th>Заголовок</th>
+               <th>Дата публикации</th>
+               <th>Текст</th>
            </tr>
 
            {% for new in news %}
            <tr>
                <td>{{ new.get_publication_display }}</td>
-               <td>{{ new.title|censor }}</td>
+               <td>
+                   <a class="nav-link" href="{% url 'new_detail' new.id %}">{{ new.title|censor }}</a>
+               </td>
                <td>{{ new.date_creation|date:'d M Y' }}</td>
                <td>{{ new.text|truncatewords:20|censor }}</td>
            </tr>
