@@ -10,40 +10,67 @@
 
 
 {% block content %}
-<h1>◄ ВСЕ ОБЪЯВЛЕНИЯ ►</h1>
-<h6><i>Вы видите {{ news|length }} из {{ paginator.count }} объявлений на нашем Новостном портале! </i></h6>
+<h1 style="text-align: center; margin-bottom: 20px;">◄ ВСЕ ОБЪЯВЛЕНИЯ ►</h1>
+<h6 style="text-align: center; color: #555;"><i>Вы видите {{ news|length }} из {{ paginator.count }} объявлений на нашем Новостном портале!</i></h6>
 
-<hr>
+<hr style="margin: 20px 0;">
+
 {% if request.user.is_authenticated %}
+    <div style="padding: 15px; border: 1px solid #ccc; background-color: #f9f9f9; margin-bottom: 20px;">
+            {% if is_author %}
+                <h5 style="color: green; margin-bottom: 10px;">✅ {{ request.user.username }}, вы являетесь автором</h5>
+            {% else %}
+                <h5 style="color: #d9534f; margin-bottom: 10px;">⚠️ {{ request.user.username }}, вы не являетесь автором</h5>
+                <p class="text-center" style="margin: 0;">
+                    <a href="{% url 'upgrade_user' %}" class="btn btn-secondary btn-sm">Стать автором</a>
+                </p>
+            {% endif %}
+    </div>
+
     {% if is_author %}
-        <h5>Вы автор</h5>
+    <div style="padding: 15px; border: 1px solid #ccc; background-color: #f9f9f9;">
+        {% if not posts_limit %}
+            <h6 style="color: #5cb85c;">📢 Доступный лимит: {{ count }} из {{ limit }} публикаций</h6>
+            <p class="text-center" style="margin-top: 10px;">
+                <a href="{% url 'news_create' %}" class="btn btn-secondary btn-sm">Добавить публикацию</a>
+            </p>
         {% else %}
-        <p class="text-center"><a href="{% url 'upgrade_user' %}" class="btn btn-secondary btn-sm">Стать автором</a></p>
+            <h6 style="color: #d9534f;">❌ Лимит публикаций исчерпан. Попробуйте позже.</h6>
         {% endif %}
+    </div>
+    {% endif %}
 {% endif %}
 
-
 {% if news %}
-    <table>
-           <tr>
-               <th>Тип публикации</th>
-               <th>Заголовок</th>
-               <th>Дата публикации</th>
-               <th>Текст</th>
-           </tr>
+    <table border="1" cellpadding="10" cellspacing="0" width="100%" style="border-collapse: collapse; text-align: center;">
+        <thead style="background-color: #f0f0f0; font-weight: bold;">
+            <tr>
+                <th>Тип публикации</th>
+                <th>Заголовок</th>
+                <th>Дата публикации</th>
+                <th>Текст</th>
+                <th>Категория</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for new in news %}
+            <tr style="border-bottom: 1px solid #ccc;">
+                <td>{{ new.get_publication_display }}</td>
+                <td>
+                    <a class="nav-link" href="{% url 'new_detail' new.id %}" style="text-decoration: none; color: #007bff;">{{ new.title|censor }}</a>
+                </td>
+                <td>{{ new.date_creation|date:'d M Y' }}</td>
+                <td style="text-align: left;">{{ new.text|truncatewords:20|censor }}</td>
+                <td>
+                    {% for category in new.post_category.all %}
+                        <a href="{% url 'category_news' category.id %}">{{ category }}</a>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-           {% for new in news %}
-           <tr>
-               <td>{{ new.get_publication_display }}</td>
-               <td>
-                   <a class="nav-link" href="{% url 'new_detail' new.id %}">{{ new.title|censor }}</a>
-               </td>
-               <td>{{ new.date_creation|date:'d M Y' }}</td>
-               <td>{{ new.text|truncatewords:20|censor }}</td>
-           </tr>
-           {% endfor %}
-
-       </table>
 {% else %}
     <h2>Объявления не найдены!</h2>
    {% endif %}

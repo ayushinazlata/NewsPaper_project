@@ -1,0 +1,14 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+    Отписаться
+{% endblock title %}
+
+{% block content %}
+<h1>Будем рады снова видеть тебя в числе наших подписчиков!</h1>
+<hr>
+
+    <h1 class="text-center">{{ message }} {{ category }} !</h1>
+<p></p>
+ <p class="text-center"><a href="{% url 'news_list' %}" class="btn btn-secondary btn-sm">See all publications</a></p>
+{% endblock content %}

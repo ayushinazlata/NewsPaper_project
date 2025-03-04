@@ -1,0 +1,21 @@
+{% extends "flatpages/default.html" %}
+
+{% load socialaccount %} 
+
+{% block content %}
+
+<h2>Регистрация</h2>
+
+<form method="post">
+{% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Зарегистрироваться">
+</form>
+
+<!-- Кнопка для регистрации через Яндекс -->
+<h3>Или зарегистрируйтесь через:</h3>
+<ul>
+    <li><a href="{% provider_login_url 'yandex' %}">Зарегистрироваться через Яндекс</a></li>
+</ul>
+
+{% endblock %}

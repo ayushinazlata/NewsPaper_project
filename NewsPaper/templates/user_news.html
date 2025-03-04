@@ -6,10 +6,11 @@
 {% endblock title %}
 
 {% block content %}
-<h1>Мои объявления</h1>
-<h6><i>На странице отображено {{user_news|length}} из {{paginator.count}} объявлений</i></h6>
+<h1 style="text-align: center; margin-bottom: 20px;">◄ Мои объявления ►</h1>
+<h6 style="text-align: center; color: #555;"><i>На странице отображено {{user_news|length}} из {{paginator.count}} объявлений</i></h6>
 
-<hr>
+<hr style="margin: 20px 0;">
+
 <form action="" method="get">
    {{ filterset.form.as_p }}
    <input type="submit" value="Найти" />
@@ -18,7 +19,8 @@
 
 
 {% if user_news %}
-    <table>
+<table border="1" cellpadding="10" cellspacing="0" width="100%" style="border-collapse: collapse; text-align: center;">
+    <thead style="background-color: #f0f0f0; font-weight: bold;">
         <tr>
             <td>Дата создания</td>
             <td>Категория</td>
@@ -28,6 +30,7 @@
             <td>Действия</td>
             {% endif %}
         </tr>
+    </thead>
 
         {% for new in user_news %}
         <tr>
@@ -56,9 +59,11 @@
             </td>
         </tr>
         {% endfor %}
-    </table>
+</table>
 {% else %}
-    <h2>Объявлений не найдено!</h2>
+<div style="text-align: center; padding: 20px; border: 1px solid #ccc; background-color: #f9f9f9;">
+    <h2>Объявлений не найдено 😔</h2>
+</div>
 {% endif %}
 
 {# Добавляем пагинацию на страницу #}
@@ -83,5 +88,8 @@
            <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
        {% endif %}
    {% endif %}
+
+<hr>
+<a href="{% url 'news_list' %}" class="btn btn-secondary">← Назад на главную</a>
 
 {% endblock content %}

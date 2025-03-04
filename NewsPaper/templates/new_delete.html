@@ -1,11 +1,11 @@
 {% extends 'flatpages/default.html' %}
 
 {% block content %}
-<h1>◄ УДАЛЕНИЕ ПУБЛИКАЦИИ ►</h1>
-<hr>
+<h1 style="text-align: center; margin-bottom: 20px;">◄ УДАЛЕНИЕ ПУБЛИКАЦИИ ►</h1>
+<hr style="margin: 20px 0;">
 <form action="" method="post">
     {% csrf_token %}
-    <p>Do you really want to delete "{{ object.title }}"?</p>
+    <p style="text-align: center; color: #b91111;">Вы действительно хотите удалить "{{ object.title }}"?</p>
     <input type="submit" value="Удалить" />
 </form>
 {% endblock content %}

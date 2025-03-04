@@ -1,0 +1,97 @@
+{% extends 'flatpages/default.html' %}
+
+
+{% load custom_filters %}
+
+
+{% block title %}
+News
+{% endblock title %}
+
+
+{% block content %}
+<h1 style="text-align: center; margin-bottom: 20px;">◄ Публикации по категории ►</h1>
+<h6 style="text-align: center; color: #555;"><i>Вы видите {{ category_news|length }} из {{ paginator.count }} публикаций в категории "{{ category.name_category }}"</i></h6>
+
+<hr style="margin: 20px 0;">
+
+{% if request.user.is_authenticated %}
+    <div style="text-align: center; margin-bottom: 20px;">
+        {% if is_not_subscriber %}
+            <a href="{% url 'subscribe' category.id %}" class="btn btn-success btn-sm">📩 Подписаться</a>
+        {% else %}
+            <a href="{% url 'delete_subscribe' category.id %}" class="btn btn-danger btn-sm">🚫 Отписаться</a>
+        {% endif %}
+    </div>
+{% endif %}
+
+<form method="GET">
+    {{ filterset.form.as_p }}
+    <button type="submit" class="btn btn-primary">Фильтровать</button>
+</form>
+
+<br>
+
+{% if category_news %}
+<table border="1" cellpadding="10" cellspacing="0" width="100%" style="border-collapse: collapse; text-align: center;">
+    <thead style="background-color: #f0f0f0; font-weight: bold;">
+        <tr>
+            <th>Тип</th>
+            <th>Заголовок</th>
+            <th>Дата</th>
+            <th>Текст</th>
+            <th>Категории</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for new in category_news %}
+        <tr>
+            <td>{{ new.get_publication_display }}</td>
+            <td><a href="{% url 'new_detail' new.id %}" style="text-decoration: none; color: #007bff;">{{ new.title }}</a></td>
+            <td>{{ new.date_creation|date:'d M Y' }}</td>
+            <td style="text-align: left;">{{ new.text|truncatewords:20|censor }}</td>
+            <td>
+                {% for cat in new.post_category.all %}
+                    <a href="{% url 'category_news' cat.id %}" style="text-decoration: none;">{{ cat }}</a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div style="text-align: center; padding: 20px; border: 1px solid #ccc; background-color: #f9f9f9;">
+    <h2>Нет публикаций в этой категории 😔</h2>
+</div>
+{% endif %}
+
+
+<hr>
+
+{# Добавляем пагинацию на страницу #}
+
+   {# Информация о предыдущих страницах #}
+   {% if page_obj.has_previous %}
+       <a href="?page=1">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {# Информация о текущей странице #}
+   {{ page_obj.number }}
+
+   {# Информация о следующих страницах #}
+   {% if page_obj.has_next %}
+       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+
+<hr>
+<a href="{% url 'news_list' %}" class="btn btn-secondary">← Назад на главную</a>
+
+{% endblock content %}

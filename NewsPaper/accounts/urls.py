@@ -1,11 +1,13 @@
-from django.urls import path
-from .views import (ProfileEdit, LoginUserView, logout_user)
+from django.urls import path, include
+from .views import (ProfileEdit, logout_user)
 
 
 app_name = 'accounts'
 
 urlpatterns = [
-    path('login/', LoginUserView.as_view(), name='login'),
+    # path('signup/', SignUp.as_view(), name='signup'),
+    # path('login/', LoginUserView.as_view(), name='login'),
     path('logout/', logout_user, name='logout'),
     path('profile/edit/', ProfileEdit.as_view(), name='profile_edit'),
+    path('', include('allauth.urls')),
 ]

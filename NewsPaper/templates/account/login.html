@@ -1,5 +1,7 @@
 {% extends 'flatpages/default.html' %}
 
+{% load socialaccount %} 
+
 {% block content %}
 
 <h2>Вход в систему</h2>
@@ -10,5 +12,11 @@
     <input type="submit" value="Войти">
     <input type="hidden" name="next" value="{{ next }}">
 </form>
+
+<!-- Кнопка для входа через социальные сети, например, Яндекс -->
+<h3>Или войдите через:</h3>
+<ul>
+    <li><a href="{% provider_login_url 'yandex' %}">Войти через Яндекс</a></li>
+</ul>
 
 {% endblock %}

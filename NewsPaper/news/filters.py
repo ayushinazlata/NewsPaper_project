@@ -10,9 +10,18 @@ class PostFilter(FilterSet):
         label='По названию'
     )
 
+    def __init__(self, *args, **kwargs):
+        category = kwargs.pop('category', None) 
+        super().__init__(*args, **kwargs)
+
+        if category:
+            self.filters['author'].queryset = Author.objects.filter(post__post_category=category).distinct()
+        else:
+            self.filters['author'].queryset = Author.objects.filter(post__isnull=False).distinct()
+
     author = ModelChoiceFilter(
         field_name='author',
-        queryset=Author.objects.filter(post__isnull=False).distinct(),
+        queryset=Author.objects.none(), 
         label='Автор',
         empty_label='Выберите автора'
     )

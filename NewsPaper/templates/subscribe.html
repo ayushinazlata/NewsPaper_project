@@ -1,0 +1,14 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+    Подписаться на обновления
+{% endblock title %}
+
+{% block content %}
+<h1>Спасибо за интерес к нашему Новостному порталу!</h1>
+<hr>
+
+    <h1 class="text-center">{{ message }} {{ category }} !</h1>
+<p></p>
+ <p class="text-center"><a href="{% url 'news_list' %}" class="btn btn-secondary btn-sm">Посмотреть все публикации</a></p>
+{% endblock content %}
