@@ -149,3 +149,11 @@ APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
 
 # если задача не выполняется за 25 секунд, то она автоматически снимается, можете поставить время побольше, но как правило, это сильно бьёт по производительности сервера
 APSCHEDULER_RUN_NOW_TIMEOUT = 25  # Seconds
+
+REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')
+
+CELERY_BROKER_URL = f'redis://default:{REDIS_PASSWORD}@redis-16593.c8.us-east-1-2.ec2.redns.redis-cloud.com:16593'
+CELERY_RESULT_BACKEND = f'redis://default:{REDIS_PASSWORD}@redis-16593.c8.us-east-1-2.ec2.redns.redis-cloud.com:16593'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

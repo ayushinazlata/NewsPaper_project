@@ -1,2 +1,3 @@
 venv/
 .env
+NewsPaper_project-1/NewsPaper/celerybeat-schedule

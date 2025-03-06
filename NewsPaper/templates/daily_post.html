@@ -2,14 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Еженедельная подборка новостей</title>
 </head>
 <body>
-<h1>Здравствуй! Новые статьи за прошедшую неделю!</h1>
+<h2>Здравствуйте!</h2>
+<p>Мы подготовили для вас подборку новых статей, опубликованных за последнюю неделю:</p>
+<hr>
+
 <ul>
   {% for post in posts %}
-  <li><a href="{{ link }}{{ post.get_absolute_url }}">{{ post.title }}</a></li>
+  <li>
+    <strong><a href="{{ link }}{{ post.get_absolute_url }}">{{ post.title }}</a></strong>
+    <br>
+    <small>Дата публикации: {{ post.date_creation|date:"d M Y" }}</small>
+  </li>
   {% endfor %}
 </ul>
+
+<hr>
+
+<p>С уважением, команда новостного портала</p>
 </body>
 </html>
