@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
 
 
 class NewsList(ListView):
@@ -49,6 +50,18 @@ class NewList(DetailView):
     model = Post
     template_name = 'new.html'
     context_object_name = 'new'
+
+    queryset = Post.objects.all()
+
+    def get_object(self, *args, **kwargs): # переопределяем метод получения объекта
+        obj = cache.get(f'post-{self.kwargs["pk"]}', None)
+
+        # если объекта нет в кэше, то получаем его и записывает в кэш
+        if not obj:
+            obj = super().get_object(queryset=self.queryset)
+            cache.set(f'post-{self.kwargs["pk"]}', obj)
+
+        return obj
 
 
 class UserNewsListView(ListView):

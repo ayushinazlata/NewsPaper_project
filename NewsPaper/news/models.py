@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
@@ -65,6 +66,14 @@ class Post(models.Model):
     
     def get_absolute_url(self):
         return f'/news/{self.id}'
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cache.delete(f'post-{self.pk}')  # Очистка кэша после сохранения
+
+    def delete(self, *args, **kwargs):
+        cache.delete(f'post-{self.pk}')  # Очистка кэша перед удалением
+        super().delete(*args, **kwargs)
 
 
 class PostCategory(models.Model):
