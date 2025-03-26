@@ -2,3 +2,4 @@ venv/
 .env
 NewsPaper_project-1/NewsPaper/celerybeat-schedule
 cache_files/
+NewsPaper_project-1/NewsPaper/mydata
