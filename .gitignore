@@ -3,3 +3,6 @@ venv/
 NewsPaper_project-1/NewsPaper/celerybeat-schedule
 cache_files/
 NewsPaper_project-1/NewsPaper/mydata
+NewsPaper_project-1/NewsPaper/errors.log
+NewsPaper_project-1/NewsPaper/general.log
+NewsPaper_project-1/NewsPaper/security.log
