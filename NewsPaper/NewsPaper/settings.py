@@ -38,9 +38,6 @@ LOGGING = {
         'console_error': {
             'format': '%(asctime)s - %(levelname)s - %(message)s - %(pathname)s - %(exc_info)s',
         },
-        'file_general': {
-            'format': '%(asctime)s - %(levelname)s - %(module)s - %(message)s',
-        },
         'file_errors': {
             'format': '%(asctime)s - %(levelname)s - %(message)s - %(pathname)s - %(exc_info)s',
         },
@@ -78,23 +75,16 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'console_error',
         },
-        'file_general': {
-            'level': 'INFO',
-            'filters': ['require_debug_false'],
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'general.log'),
-            'formatter': 'file_general',
-        },
         'file_errors': {
             'level': 'ERROR',
-            'filters': ['require_debug_false'],
+            'filters': ['require_debug_true'],
             'class': 'logging.FileHandler',
             'filename': os.path.join(BASE_DIR, 'errors.log'),
             'formatter': 'file_errors',
         },
         'file_security': {
             'level': 'INFO',
-            'filters': ['require_debug_false'],
+            'filters': ['require_debug_true'],
             'class': 'logging.FileHandler',
             'filename': os.path.join(BASE_DIR, 'security.log'),
             'formatter': 'file_security',
@@ -176,6 +166,7 @@ AUTHENTICATION_BACKENDS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware'
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -226,6 +217,10 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale')
+]
 
 # Статика
 STATIC_URL = '/static/'
