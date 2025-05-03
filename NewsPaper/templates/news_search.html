@@ -20,8 +20,8 @@
 <hr>
 
 {% if news %}
-<table border="1" cellpadding="10" cellspacing="0" width="100%" style="border-collapse: collapse; text-align: center;">
-    <thead style="background-color: #f0f0f0; font-weight: bold;">
+<table border="1" cellpadding="10" cellspacing="0" width="100%" style="border-collapse: collapse; text-align: center; background-color: #f9f9f9;">
+    <thead style="background-color: #333; font-weight: bold; color: white;">
         <tr>
             <th>{% trans "Type" %}</th>
             <th>{% trans "Title" %}</th>
@@ -31,7 +31,7 @@
         </tr>
     </thead>
         {% for new in news %}
-        <tr>
+        <tr style="border-bottom: 1px solid #ccc; color: black;">
             <td>{{ new.get_publication_display }}</td>
             <td>
                 <a class="nav-link" href="{% url 'new_detail' new.id %}">{{ new.title|censor }}</a>

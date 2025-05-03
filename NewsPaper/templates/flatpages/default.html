@@ -1,4 +1,4 @@
-{% load cache i18n static tz %}
+{% load cache i18n static tz %} 
 {% get_current_language as LANGUAGE_CODE %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
@@ -10,27 +10,18 @@
     <title>
         {% block title %}{% endblock title %}
     </title>
-    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/styles.css' %}?v={{ time_of_day }}" rel="stylesheet" />
     <!-- Если сейчас больше чем 19 или же меньше 7, то выводим тёмную тему, иначе светлую -->
     <style>
         body {
-            background-color: {% if time_of_day == "night" %}
-                #1e1e2f; /* тёмный фон */
-            {% else %}
-                #f0f8ff; /* светлый фон */
-            {% endif %};
-            color: {% if time_of_day == "night" %}
-                white;
-            {% else %}
-                black;
-            {% endif %};
+            background-color: {% if time_of_day == "night" %} #1e1e2f; {% else %} #f0f8ff; {% endif %};
+            color: {% if time_of_day == "night" %} white; {% else %} black; {% endif %};
         }
     </style>       
 </head>
 <body>
 
-    <!-- Навбар в кэше -->
-    {% cache 10 navbar LANGUAGE_CODE request.user.is_authenticated request.session.django_timezone time_of_day %}
+    <!-- Навбар в кэше, убираем кэширование для часового пояса -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
         <div class="container">
             <a class="navbar-brand" href="/news/">{% trans "News Portal" %}</a>
@@ -74,17 +65,18 @@
                             <button type="submit" class="btn btn-sm btn-outline-light">{% trans "Apply" %}</button>
                         </form>
                     </li>
-                    <!-- Timezone switcher -->
+
+                    <!-- Timezone switcher (НЕ кешируем) -->
                     <li class="nav-item me-2">
-                        <form action="" method="POST">
+                        <form action="" method="POST" class="d-flex align-items-center">
                             {% csrf_token %}
-                            <label for="timezone">Time zone:</label>
-                            <select name="timezone">
+                            <label for="timezone" style="color: #f8f9fa; font-weight: normal; font-size: 14px; margin-bottom: 5px;">{% trans "Time zone:" %}</label>
+                            <select name="timezone" class="form-select form-select-sm me-2" style="width: auto;">
                                 {% for tz in timezones %}
-                                <option value="{{ tz }}"{% if tz == TIME_ZONE %} selected{% endif %}> {{ tz }} </option>
+                                    <option value="{{ tz }}"{% if tz == TIME_ZONE %} selected{% endif %}>{{ tz }}</option>
                                 {% endfor %}
                             </select>
-                            <input type="submit" value="Set">
+                            <input type="submit" value="{% trans 'Set' %}" class="btn btn-sm btn-outline-light">
                         </form>
                     </li>
 
@@ -104,18 +96,23 @@
             </div>
         </div>
     </nav>
-    {% endcache %}
 
     <!-- Контент -->
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
-                {% block content %}
-                {{ flatpage.content }}
-                {% endblock content %}
+                {% block timezone_info %}
+                <div style="border: 1px solid #ddd; background-color: #fdfdfd; padding: 10px 15px; border-radius: 8px; max-width: 400px; margin: 0 auto 30px auto; box-shadow: 0 1px 3px rgba(0,0,0,0.05); font-size: 0.95em;">
+                    {% get_current_timezone as TIME_ZONE %}
+                    <p style="margin: 5px 0; color: black;"><strong>{% trans "Current time zone:" %}</strong> {{ TIME_ZONE }}</p>
+                    <p style="margin: 5px 0; color: black;"><strong>{% trans "Current time:" %}</strong> {{ current_time|timezone:TIME_ZONE|date:"Y-m-d H:i" }}</p>
+                </div>
+                {% endblock %}
+
+                {% block content %} {{ flatpage.content }} {% endblock content %}
             </div>
         </div>
     </div>
+
 </body>
 </html>
-пше ы

@@ -27,8 +27,10 @@ class NewsList(ListView):
 
         # Считываем выбранный часовой пояс из сессии или по умолчанию UTC
         timezone_name = self.request.session.get('django_timezone', 'UTC')
-        timezone.activate(pytz.timezone(timezone_name))  # Активируем часовой пояс
-        current_time = timezone.now()  # Получаем текущее время в активированном часовом поясе
+        user_timezone = pytz.timezone(timezone_name)  # Получаем объект часового пояса
+
+        # Получаем текущее время в UTC и переводим в часовой пояс пользователя
+        current_time = timezone.now().astimezone(user_timezone)  # Переводим время в выбранный часовой пояс
 
         # Делаем проверку времени для смены фона
         time_of_day = "day" if 7 <= current_time.hour < 19 else "night"
@@ -59,11 +61,16 @@ class NewsList(ListView):
         return context
 
     def post(self, request):
+        # Получаем новый часовой пояс из формы
         timezone_name = request.POST.get('timezone', 'UTC')
+
+        # Если выбранный часовой пояс правильный, сохраняем его в сессии и активируем
         if timezone_name in pytz.common_timezones:
             request.session['django_timezone'] = timezone_name
             timezone.activate(pytz.timezone(timezone_name))
-        return redirect(request.path) 
+
+        # После изменения часового пояса пересчитываем время и обновляем контекст
+        return redirect(request.path)
 
 
 class NewList(DetailView):
@@ -82,6 +89,19 @@ class NewList(DetailView):
             cache.set(f'post-{self.kwargs["pk"]}', obj)
 
         return obj
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Считываем выбранный часовой пояс из сессии
+        timezone_name = self.request.session.get('django_timezone', 'UTC')
+        timezone.activate(pytz.timezone(timezone_name))  # Активируем часовой пояс
+        current_time = timezone.now()  # Получаем текущее время
+
+        context['timezones'] = pytz.common_timezones  # Все доступные часовые пояса
+        context['current_time'] = current_time  # Добавляем в контекст текущее время
+            
+        return context    
 
 
 class UserNewsListView(ListView):
@@ -156,6 +176,19 @@ class NewsCreate(PermissionRequiredMixin, CreateView):
         author, _ = Author.objects.get_or_create(authorUser=self.request.user)
         self.object.author = author
         return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Считываем выбранный часовой пояс из сессии
+        timezone_name = self.request.session.get('django_timezone', 'UTC')
+        timezone.activate(pytz.timezone(timezone_name))  # Активируем часовой пояс
+        current_time = timezone.now()  # Получаем текущее время
+
+        context['timezones'] = pytz.common_timezones  # Все доступные часовые пояса
+        context['current_time'] = current_time  # Добавляем в контекст текущее время
+            
+        return context   
 
 
 class NewsEdit(PermissionRequiredMixin, UpdateView):
@@ -165,12 +198,38 @@ class NewsEdit(PermissionRequiredMixin, UpdateView):
     template_name = 'new_edit.html'
     success_url = reverse_lazy('user_news')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Считываем выбранный часовой пояс из сессии
+        timezone_name = self.request.session.get('django_timezone', 'UTC')
+        timezone.activate(pytz.timezone(timezone_name))  # Активируем часовой пояс
+        current_time = timezone.now()  # Получаем текущее время
+
+        context['timezones'] = pytz.common_timezones  # Все доступные часовые пояса
+        context['current_time'] = current_time  # Добавляем в контекст текущее время
+            
+        return context   
+
 
 class NewsDelete(PermissionRequiredMixin, DeleteView):
     permission_required = ('news.delete_post',)
     model = Post
     template_name = 'new_delete.html'
     success_url = reverse_lazy('news_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Считываем выбранный часовой пояс из сессии
+        timezone_name = self.request.session.get('django_timezone', 'UTC')
+        timezone.activate(pytz.timezone(timezone_name))  # Активируем часовой пояс
+        current_time = timezone.now()  # Получаем текущее время
+
+        context['timezones'] = pytz.common_timezones  # Все доступные часовые пояса
+        context['current_time'] = current_time  # Добавляем в контекст текущее время
+            
+        return context   
 
 
 @login_required
@@ -188,7 +247,18 @@ def subscribe(request, pk):
     category = get_object_or_404(Category, id=pk)
     category.subscribers.add(request.user)
     message = _('You have successfully subscribed to category updates:')
-    return render(request, 'subscribe.html', {'category': category, 'message': message})
+
+    # Считываем выбранный часовой пояс из сессии
+    timezone_name = request.session.get('django_timezone', 'UTC')
+    user_timezone = pytz.timezone(timezone_name)
+    current_time = timezone.now().astimezone(user_timezone)
+
+    return render(request, 'subscribe.html', {
+        'category': category,
+        'message': message,
+        'timezones': pytz.common_timezones,  # Все доступные часовые поясы
+        'current_time': current_time  # Текущее время в выбранном поясе
+    })
 
 
 @login_required
@@ -196,7 +266,18 @@ def delete_subscribe(request, pk):
     category = get_object_or_404(Category, id=pk)
     category.subscribers.remove(request.user)
     message = _('You have successfully unsubscribed from updates in the category:')
-    return render(request, 'delete_subscribe.html', {'category': category, 'message': message})
+
+    # Считываем выбранный часовой пояс из сессии
+    timezone_name = request.session.get('django_timezone', 'UTC')
+    user_timezone = pytz.timezone(timezone_name)
+    current_time = timezone.now().astimezone(user_timezone)
+
+    return render(request, 'delete_subscribe.html', {
+        'category': category,
+        'message': message,
+        'timezones': pytz.common_timezones,  # Все доступные часовые поясы
+        'current_time': current_time  # Текущее время в выбранном поясе
+    })
 
 
 class CategoryList(ListView):

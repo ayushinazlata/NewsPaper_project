@@ -8,17 +8,10 @@
 {% endblock title %}
 
 {% block content %}
-<p>Текущее время (debug): {{ current_time }}</p>
 <h1 style="text-align: center; margin-bottom: 20px;">◄ {% trans "ALL PUBLICATIONS" %} ►</h1>
 <h6 style="text-align: center; color: #555;"><i>{% trans "You see" %} {{ news|length }} {% trans "of" %} {{ paginator.count }} {% trans "publications on our News Portal!" %}</i></h6>
 
 <hr style="margin: 20px 0;">
-
-<div style="border: 1px solid #ddd; background-color: #fdfdfd; padding: 10px 15px; border-radius: 8px; max-width: 400px; margin: 0 auto 30px auto; box-shadow: 0 1px 3px rgba(0,0,0,0.05); font-size: 0.95em;">
-    {% get_current_timezone as TIME_ZONE %}
-    <p style="margin: 5px 0;"><strong>{% trans "Current time zone:" %}</strong> {{ TIME_ZONE }}</p>
-    <p style="margin: 5px 0;"><strong>{% trans "Current time:" %}</strong> {{ current_time|timezone:TIME_ZONE|date:"Y-m-d H:i" }}</p>
-</div>
 
 {% if request.user.is_authenticated %}
     <div style="padding: 15px; border: 1px solid #ccc; background-color: #f9f9f9; margin-bottom: 20px;">
@@ -47,8 +40,8 @@
 {% endif %}
 
 {% if news %}
-    <table border="1" cellpadding="10" cellspacing="0" width="100%" style="border-collapse: collapse; text-align: center;">
-        <thead style="background-color: #f0f0f0; font-weight: bold;">
+    <table border="1" cellpadding="10" cellspacing="0" width="100%" style="border-collapse: collapse; text-align: center; background-color: #f9f9f9;">
+        <thead style="background-color: #333; font-weight: bold; color: white;">
             <tr>
                 <th>{% trans "Type" %}</th>
                 <th>{% trans "Title" %}</th>
@@ -59,7 +52,7 @@
         </thead>
         <tbody>
             {% for new in news %}
-            <tr style="border-bottom: 1px solid #ccc;">
+            <tr style="border-bottom: 1px solid #ccc; color: black;">
                 <td>{{ new.get_publication_display }}</td>
                 <td>
                     <a class="nav-link" href="{% url 'new_detail' new.id %}" style="text-decoration: none; color: #007bff;">{{ new.title|censor }}</a>
@@ -76,26 +69,26 @@
         </tbody>
     </table>
 
-    {% else %}
-        <h2>{% trans "No publications found!" %}</h2>
+{% else %}
+    <h2>{% trans "No publications found!" %}</h2>
 {% endif %}
 <hr>
 
-    {% if page_obj.has_previous %}
-        <a href="?page=1">1</a>
-        {% if page_obj.previous_page_number != 1 %}
-            ...
-            <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
-        {% endif %}
+{% if page_obj.has_previous %}
+    <a href="?page=1">1</a>
+    {% if page_obj.previous_page_number != 1 %}
+        ...
+        <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
     {% endif %}
+{% endif %}
 
-    {{ page_obj.number }}
+{{ page_obj.number }}
 
-    {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
-        {% if paginator.num_pages != page_obj.next_page_number %}
-            ...
-            <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
-        {% endif %}
+{% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+    {% if paginator.num_pages != page_obj.next_page_number %}
+        ...
+        <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
     {% endif %}
+{% endif %}
 {% endblock content %}

@@ -19,8 +19,8 @@
 
 
 {% if user_news %}
-<table border="1" cellpadding="10" cellspacing="0" width="100%" style="border-collapse: collapse; text-align: center;">
-    <thead style="background-color: #f0f0f0; font-weight: bold;">
+<table border="1" cellpadding="10" cellspacing="0" width="100%" style="border-collapse: collapse; text-align: center; background-color: #f9f9f9;">
+    <thead style="background-color: #333; font-weight: bold; color: white;">
         <tr>
             <td>{% trans "Date of publication" %}</td>
             <td>{% trans "Category" %}</td>
@@ -33,7 +33,7 @@
     </thead>
 
         {% for new in user_news %}
-        <tr>
+        <tr style="border-bottom: 1px solid #ccc; color: black;">
             <td>{{ new.date_creation|date:'d M Y' }}</td>
             <td>
                 {% for category in new.post_category.all %}
