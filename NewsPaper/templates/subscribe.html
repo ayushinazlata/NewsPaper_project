@@ -1,14 +1,15 @@
 {% extends 'flatpages/default.html' %}
+{% load i18n %}
 
 {% block title %}
-    Подписаться на обновления
+    {% trans "Subscribe" %}
 {% endblock title %}
 
 {% block content %}
-<h1>Спасибо за интерес к нашему Новостному порталу!</h1>
+<h1>{% trans "Thank you for your interest in our News Portal!" %}</h1>
 <hr>
 
     <h1 class="text-center">{{ message }} {{ category }} !</h1>
 <p></p>
- <p class="text-center"><a href="{% url 'news_list' %}" class="btn btn-secondary btn-sm">Посмотреть все публикации</a></p>
+ <p class="text-center"><a href="{% url 'news_list' %}" class="btn btn-secondary btn-sm">{% trans "See all publications" %}</a></p>
 {% endblock content %}

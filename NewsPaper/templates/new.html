@@ -1,7 +1,8 @@
 {% extends 'flatpages/default.html' %}
+{% load i18n %}
 
 {% block title %}
-Объявление
+{% trans "Publication" %}
 {% endblock title %}
 
 {% load custom_filters %}
@@ -14,6 +15,6 @@
 
 <hr>
 
-<a href="{% url 'news_list' %}" class="btn btn-secondary">← Назад на главную</a>
+<a href="{% url 'news_list' %}" class="btn btn-secondary">← {% trans "See all publications" %}</a>
 
 {% endblock content %}

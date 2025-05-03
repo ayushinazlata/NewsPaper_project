@@ -1,0 +1,425 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-02 14:18+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
+"(n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: .\accounts\forms.py:20
+msgid "Name"
+msgstr "Имя"
+
+#: .\accounts\forms.py:21
+msgid "Last Name"
+msgstr "Фамилия"
+
+#: .\accounts\forms.py:22
+msgid "Email"
+msgstr "Адрес электронной почты"
+
+#: .\news\admin.py:9
+msgid "Reset rating"
+msgstr "Сбросить рейтинг"
+
+#: .\news\filters.py:11
+msgid "By name"
+msgstr "По названию"
+
+#: .\news\filters.py:26 .\news\models.py:26 .\news\models.py:52
+msgid "Author"
+msgstr "Автор"
+
+#: .\news\filters.py:27
+msgid "select author"
+msgstr "выберите автора"
+
+#: .\news\filters.py:33
+msgid "Publication date after"
+msgstr "Публикации после"
+
+#: .\news\filters.py:47 .\news\forms.py:16 .\news\models.py:43
+#: .\templates\category_list.html:43 .\templates\news.html:53
+#: .\templates\news_search.html:30 .\templates\user_news.html:26
+msgid "Category"
+msgstr "Категория"
+
+#: .\news\filters.py:48
+msgid "select category"
+msgstr "выберите категорию"
+
+#: .\news\filters.py:53
+msgid "Publications from"
+msgstr "Публикации после"
+
+#: .\news\forms.py:13
+msgid "Type of publication"
+msgstr "Тип публикации"
+
+#: .\news\forms.py:14 .\news\models.py:70 .\templates\category_list.html:40
+#: .\templates\news.html:50 .\templates\news_search.html:27
+#: .\templates\user_news.html:27
+msgid "Title"
+msgstr "Заголовок"
+
+#: .\news\forms.py:15 .\news\models.py:71
+msgid "Text"
+msgstr "Текст"
+
+#: .\news\forms.py:26
+msgid "The name must start with a capital letter"
+msgstr "Название должно начинаться с заглавной буквы"
+
+#: .\news\management\commands\delete_news_from_category.py:6
+msgid "Removes all news from the specified category after confirmation"
+msgstr "Удаляет все публикации из указанной категории после подтверждения"
+
+#: .\news\management\commands\delete_news_from_category.py:9
+msgid "Name of the category from which all news should be removed"
+msgstr "Название категории, из которой следует удалить все публикации"
+
+#: .\news\management\commands\delete_news_from_category.py:17
+#, python-format
+msgid "❌ Error: category \"%s\" not found."
+msgstr "❌ Ошибка: категория \"%s\" не найдена."
+
+#: .\news\management\commands\delete_news_from_category.py:24
+#, python-format
+msgid "⚠️ Category \"%s\" does not contain news."
+msgstr "⚠️ Категория \"%s\" не содержит публикаций."
+
+#: .\news\management\commands\delete_news_from_category.py:28
+#, python-format
+msgid ""
+"Do you really want to remove %d news items from the category? \"%s\"? (yes/"
+"no)"
+msgstr ""
+"Вы действительно хотите удалить %d публикаций из категории? \"%s\"? (yes/no)"
+
+#: .\news\management\commands\delete_news_from_category.py:35
+#, python-format
+msgid "✅ Successfully removed %d news from category \"%s\"."
+msgstr "✅ Успешно удалены %d публикации из категории \"%s\"."
+
+#: .\news\management\commands\delete_news_from_category.py:38
+msgid "❌ Operation cancelled by user."
+msgstr "❌ Операция отклонена пользователем."
+
+#: .\news\models.py:27
+msgid "Authors"
+msgstr "Авторы"
+
+#: .\news\models.py:34
+msgid "name category"
+msgstr "название категории"
+
+#: .\news\models.py:35
+msgid "Category Name"
+msgstr "Название категории"
+
+#: .\news\models.py:44
+msgid "Categories"
+msgstr "Категории"
+
+#: .\news\models.py:51
+msgid "Author of publication"
+msgstr "Автор публикации"
+
+#: .\news\models.py:58 .\templates\category_list.html:8
+msgid "News"
+msgstr "Новость"
+
+#: .\news\models.py:59
+msgid "Article"
+msgstr "Статья"
+
+#: .\news\models.py:66 .\news\models.py:100 .\templates\new.html:5
+msgid "Publication"
+msgstr "Публикация"
+
+#: .\news\models.py:68 .\templates\category_list.html:41
+#: .\templates\news.html:51 .\templates\news_search.html:28
+#: .\templates\user_news.html:25
+msgid "Date of publication"
+msgstr "Дата публикации"
+
+#: .\news\models.py:72
+msgid "Rating"
+msgstr "Рейтинг"
+
+#: .\news\models.py:101 .\templates\news.html:9
+msgid "Publications"
+msgstr "Публикации"
+
+#: .\news\models.py:112
+msgid "Post Category"
+msgstr "Категории поста"
+
+#: .\news\models.py:113
+msgid "Post Categories"
+msgstr "Категории постов"
+
+#: .\news\models.py:136
+msgid "Comment"
+msgstr "Комментарий"
+
+#: .\news\models.py:137
+msgid "Comments"
+msgstr "Комментарии"
+
+#: .\news\views.py:153
+msgid "You have successfully subscribed to category updates:"
+msgstr "Вы успешно подписались на обновления категории:"
+
+#: .\news\views.py:161
+msgid "You have successfully unsubscribed from updates in the category:"
+msgstr "Вы успешно отписались от обновлений категории:"
+
+#: .\templates\403.html:6
+msgid "Error 403"
+msgstr "Ошибка 403"
+
+#: .\templates\403.html:9
+msgid "It seems you do not have access to this page..."
+msgstr "Кажется у вас нет доступа к этой странице..."
+
+#: .\templates\account\login.html:8 .\templates\flatpages\default.html:76
+msgid "Log In"
+msgstr "Вход"
+
+#: .\templates\account\login.html:13
+msgid "Log in"
+msgstr "Вход"
+
+#: .\templates\account\login.html:18 .\templates\account\signup.html:17
+msgid "Or sign in from:"
+msgstr "Или войдите через:"
+
+#: .\templates\account\login.html:20
+msgid "Login from Yandex"
+msgstr "Вход через Яндекс"
+
+#: .\templates\account\signup.html:8
+msgid "Register"
+msgstr "Регистрация"
+
+#: .\templates\account\signup.html:13
+msgid "Sign up"
+msgstr "Зарегистрироваться"
+
+#: .\templates\account\signup.html:19
+msgid "Sign up from Yandex"
+msgstr "Зарегистрироваться через Яндекс "
+
+#: .\templates\category_list.html:13
+msgid "ALL PUBLICATIONS IN  CATEGORY"
+msgstr "ВСЕ ПУБЛИКАЦИИ КАТЕГОРИИ"
+
+#: .\templates\category_list.html:14 .\templates\news.html:15
+#: .\templates\news_search.html:12 .\templates\user_news.html:10
+msgid "You see"
+msgstr "Вы видите"
+
+#: .\templates\category_list.html:14 .\templates\news.html:15
+#: .\templates\news.html:34 .\templates\news_search.html:12
+#: .\templates\user_news.html:10
+msgid "of"
+msgstr "из"
+
+#: .\templates\category_list.html:14
+msgid "publications in category"
+msgstr "публикаций в категории"
+
+#: .\templates\category_list.html:21 .\templates\subscribe.html:5
+msgid "Subscribe"
+msgstr "Подписаться"
+
+#: .\templates\category_list.html:23 .\templates\delete_subscribe.html:5
+msgid "Unsubscribe"
+msgstr "Отписаться"
+
+#: .\templates\category_list.html:30
+msgid "Filter"
+msgstr "Фильтровать"
+
+#: .\templates\category_list.html:39 .\templates\news.html:49
+#: .\templates\news_search.html:26
+msgid "Type"
+msgstr "Тип"
+
+#: .\templates\category_list.html:42 .\templates\news.html:52
+#: .\templates\news_search.html:29 .\templates\user_news.html:28
+msgid "Content"
+msgstr "Текст"
+
+#: .\templates\category_list.html:64
+msgid "There are no publications in this category."
+msgstr "Публикации в категории не найдены."
+
+#: .\templates\category_list.html:95 .\templates\delete_subscribe.html:14
+#: .\templates\new.html:18 .\templates\news_search.html:77
+#: .\templates\subscribe.html:14 .\templates\user_news.html:93
+msgid "See all publications"
+msgstr "Назад на главную"
+
+#: .\templates\delete_subscribe.html:9
+msgid "We will be glad to see you among our subscribers again!"
+msgstr "Будем рады снова видеть Вас среди наших подписчиков!"
+
+#: .\templates\flatpages\default.html:23
+msgid "News Portal"
+msgstr "Новостной Портал"
+
+#: .\templates\flatpages\default.html:35 .\templates\user_news.html:5
+msgid "My publications"
+msgstr "Мои публикации"
+
+#: .\templates\flatpages\default.html:39 .\templates\news_search.html:17
+#: .\templates\user_news.html:16
+msgid "Search"
+msgstr "Поиск"
+
+#: .\templates\flatpages\default.html:42
+msgid "Responses"
+msgstr "Отклики"
+
+#: .\templates\flatpages\default.html:63
+msgid "Apply"
+msgstr "Выбор"
+
+#: .\templates\flatpages\default.html:69
+msgid "Logout"
+msgstr "Выход"
+
+#: .\templates\flatpages\default.html:73
+msgid "Sign Up"
+msgstr "Зарегистрироваться"
+
+#: .\templates\new_delete.html:5
+msgid "DELETING A PUBLICATION"
+msgstr "УДАЛИТЬ ПУБЛИКАЦИЮ"
+
+#: .\templates\new_delete.html:9
+msgid "Are you sure you want to delete"
+msgstr "Вы уверены, что хотите удалить"
+
+#: .\templates\new_delete.html:10 .\templates\user_news.html:56
+msgid "Delete"
+msgstr "Удалить"
+
+#: .\templates\new_edit.html:5
+msgid "CREATING A PUBLICATION"
+msgstr "СОЗДАНИЕ ПУБЛИКАЦИИ"
+
+#: .\templates\new_edit.html:10
+msgid "Save it"
+msgstr "Сохранить"
+
+#: .\templates\news.html:14
+msgid "ALL PUBLICATIONS"
+msgstr "ВСЕ ПУБЛИКАЦИИ"
+
+#: .\templates\news.html:15 .\templates\news_search.html:12
+msgid "publications on our News Portal!"
+msgstr "публикации на нашем Новостном Портале!"
+
+#: .\templates\news.html:22
+msgid "you are the author"
+msgstr "вы являетесь автором"
+
+#: .\templates\news.html:24
+msgid "you are not the author"
+msgstr "вы не являетесь автором"
+
+#: .\templates\news.html:26
+msgid "Become an author"
+msgstr "Стать автором"
+
+#: .\templates\news.html:34
+msgid "Available limit"
+msgstr "Доступный лимит"
+
+#: .\templates\news.html:34
+msgid "publications"
+msgstr "публикаций"
+
+#: .\templates\news.html:36
+msgid "Add a publication"
+msgstr "Добавить публикацию"
+
+#: .\templates\news.html:39
+msgid "Publication limit reached. Try again later."
+msgstr "Лимит публикаций исчерпан. Попробуйте позже."
+
+#: .\templates\news.html:76
+msgid "No publications found!"
+msgstr "Публикации не найдены!"
+
+#: .\templates\news_search.html:7
+msgid "Searching publications"
+msgstr "Поиск публикаций"
+
+#: .\templates\news_search.html:11
+msgid "SEARCHING PUBLICATIONS"
+msgstr "ПОИСК ПУБЛИКАЦИЙ"
+
+#: .\templates\news_search.html:51
+msgid "No publications found"
+msgstr "Публикации не найдены"
+
+#: .\templates\subscribe.html:9
+msgid "Thank you for your interest in our News Portal!"
+msgstr "Спасибо за интерес к нашему Новостному Порталу!"
+
+#: .\templates\user_news.html:9
+msgid "MY PUBLICATIONS"
+msgstr "МОИ ПУБЛИКАЦИИ"
+
+#: .\templates\user_news.html:10
+msgid "your publications"
+msgstr "ваших публикаций"
+
+#: .\templates\user_news.html:30
+msgid "Actions"
+msgstr "Действия"
+
+#: .\templates\user_news.html:51
+msgid "Edit"
+msgstr "Редактировать"
+
+#: .\templates\user_news.html:65
+msgid "No publications find"
+msgstr "Публикации не найдены"
+
+#~ msgid "Date"
+#~ msgstr "Дата"
+
+#, fuzzy
+#~| msgid "author of publication"
+#~ msgid "Автор публикации"
+#~ msgstr "автор публикации"
+
+#, fuzzy
+#~| msgid "publications in category"
+#~ msgid "Публикации в категории"
+#~ msgstr "публикаций в категории"
+
+#~ msgid "English"
+#~ msgstr "Английский"
+
+#~ msgid "Russian"
+#~ msgstr "Русский"

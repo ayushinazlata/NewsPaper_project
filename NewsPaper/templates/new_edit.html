@@ -1,11 +1,12 @@
 {% extends 'flatpages/default.html' %}
+{% load i18n %}
 
 {% block content %}
-<h1 style="text-align: center; margin-bottom: 20px;">◄ СОЗДАНИЕ ПУБЛИКАЦИИ ►</h1>
+<h1 style="text-align: center; margin-bottom: 20px;">◄ {% trans "CREATING A PUBLICATION" %} ►</h1>
 <hr style="margin: 20px 0;">
 <form action="" method="post">
   {% csrf_token %}
   {{ form.as_p }}
-  <input type="submit" value="Сохранить" />
+  <input type="submit" value="{% trans 'Save it' %}" />
 </form>
 {% endblock content %}

@@ -1,41 +1,46 @@
 {% extends 'flatpages/default.html' %}
-
-
+{% load i18n %}
+{% load tz %}
 {% load custom_filters %}
 
-
 {% block title %}
-Объявления
+    {% trans "Publications" %}
 {% endblock title %}
 
-
 {% block content %}
-<h1 style="text-align: center; margin-bottom: 20px;">◄ ВСЕ ОБЪЯВЛЕНИЯ ►</h1>
-<h6 style="text-align: center; color: #555;"><i>Вы видите {{ news|length }} из {{ paginator.count }} объявлений на нашем Новостном портале!</i></h6>
+<p>Текущее время (debug): {{ current_time }}</p>
+<h1 style="text-align: center; margin-bottom: 20px;">◄ {% trans "ALL PUBLICATIONS" %} ►</h1>
+<h6 style="text-align: center; color: #555;"><i>{% trans "You see" %} {{ news|length }} {% trans "of" %} {{ paginator.count }} {% trans "publications on our News Portal!" %}</i></h6>
 
 <hr style="margin: 20px 0;">
 
+<div style="border: 1px solid #ddd; background-color: #fdfdfd; padding: 10px 15px; border-radius: 8px; max-width: 400px; margin: 0 auto 30px auto; box-shadow: 0 1px 3px rgba(0,0,0,0.05); font-size: 0.95em;">
+    {% get_current_timezone as TIME_ZONE %}
+    <p style="margin: 5px 0;"><strong>{% trans "Current time zone:" %}</strong> {{ TIME_ZONE }}</p>
+    <p style="margin: 5px 0;"><strong>{% trans "Current time:" %}</strong> {{ current_time|timezone:TIME_ZONE|date:"Y-m-d H:i" }}</p>
+</div>
+
 {% if request.user.is_authenticated %}
     <div style="padding: 15px; border: 1px solid #ccc; background-color: #f9f9f9; margin-bottom: 20px;">
-            {% if is_author %}
-                <h5 style="color: green; margin-bottom: 10px;">✅ {{ request.user.username }}, вы являетесь автором</h5>
-            {% else %}
-                <h5 style="color: #d9534f; margin-bottom: 10px;">⚠️ {{ request.user.username }}, вы не являетесь автором</h5>
-                <p class="text-center" style="margin: 0;">
-                    <a href="{% url 'upgrade_user' %}" class="btn btn-secondary btn-sm">Стать автором</a>
-                </p>
-            {% endif %}
+        {% if is_author %}
+            <h5 style="color: green; margin-bottom: 10px;">✅ {{ request.user.username }}, {% trans "you are the author" %}</h5>
+        {% else %}
+            <h5 style="color: #d9534f; margin-bottom: 10px;">⚠️ {{ request.user.username }}, {% trans "you are not the author" %}</h5>
+            <p class="text-center" style="margin: 0;">
+                <a href="{% url 'upgrade_user' %}" class="btn btn-secondary btn-sm">{% trans "Become an author" %}</a>
+            </p>
+        {% endif %}
     </div>
 
     {% if is_author %}
     <div style="padding: 15px; border: 1px solid #ccc; background-color: #f9f9f9;">
         {% if not posts_limit %}
-            <h6 style="color: #5cb85c;">📢 Доступный лимит: {{ count }} из {{ limit }} публикаций</h6>
+            <h6 style="color: #5cb85c;">📢 {% trans "Available limit" %}: {{ count }} {% trans "of" %} {{ limit }} {% trans "publications" %}</h6>
             <p class="text-center" style="margin-top: 10px;">
-                <a href="{% url 'news_create' %}" class="btn btn-secondary btn-sm">Добавить публикацию</a>
+                <a href="{% url 'news_create' %}" class="btn btn-secondary btn-sm">{% trans "Add a publication" %}</a>
             </p>
         {% else %}
-            <h6 style="color: #d9534f;">❌ Лимит публикаций исчерпан. Попробуйте позже.</h6>
+            <h6 style="color: #d9534f;">❌ {% trans "Publication limit reached. Try again later." %}</h6>
         {% endif %}
     </div>
     {% endif %}
@@ -45,11 +50,11 @@
     <table border="1" cellpadding="10" cellspacing="0" width="100%" style="border-collapse: collapse; text-align: center;">
         <thead style="background-color: #f0f0f0; font-weight: bold;">
             <tr>
-                <th>Тип публикации</th>
-                <th>Заголовок</th>
-                <th>Дата публикации</th>
-                <th>Текст</th>
-                <th>Категория</th>
+                <th>{% trans "Type" %}</th>
+                <th>{% trans "Title" %}</th>
+                <th>{% trans "Date of publication" %}</th>
+                <th>{% trans "Content" %}</th>
+                <th>{% trans "Category" %}</th>
             </tr>
         </thead>
         <tbody>
@@ -71,34 +76,26 @@
         </tbody>
     </table>
 
-{% else %}
-    <h2>Объявления не найдены!</h2>
-   {% endif %}
+    {% else %}
+        <h2>{% trans "No publications found!" %}</h2>
+{% endif %}
+<hr>
 
+    {% if page_obj.has_previous %}
+        <a href="?page=1">1</a>
+        {% if page_obj.previous_page_number != 1 %}
+            ...
+            <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+        {% endif %}
+    {% endif %}
 
-   <hr>
-  
-{# Добавляем пагинацию на страницу #}
+    {{ page_obj.number }}
 
-   {# Информация о предыдущих страницах #}
-   {% if page_obj.has_previous %}
-       <a href="?page=1">1</a>
-       {% if page_obj.previous_page_number != 1 %}
-           ...
-           <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
-       {% endif %}
-   {% endif %}
-
-   {# Информация о текущей странице #}
-   {{ page_obj.number }}
-
-   {# Информация о следующих страницах #}
-   {% if page_obj.has_next %}
-       <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
-       {% if paginator.num_pages != page_obj.next_page_number %}
-           ...
-           <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
-       {% endif %}
-   {% endif %}
-
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+        {% if paginator.num_pages != page_obj.next_page_number %}
+            ...
+            <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+        {% endif %}
+    {% endif %}
 {% endblock content %}

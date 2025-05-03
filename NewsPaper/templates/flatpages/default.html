@@ -1,58 +1,103 @@
-{% load cache %}
+{% load cache i18n static tz %}
+{% get_current_language as LANGUAGE_CODE %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>
-        {% block title %}
-        {% endblock title %}
+        {% block title %}{% endblock title %}
     </title>
-    {% load static %}
-    <!-- Core theme CSS (includes Bootstrap)-->
     <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    <!-- Если сейчас больше чем 19 или же меньше 7, то выводим тёмную тему, иначе светлую -->
+    <style>
+        body {
+            background-color: {% if time_of_day == "night" %}
+                #1e1e2f; /* тёмный фон */
+            {% else %}
+                #f0f8ff; /* светлый фон */
+            {% endif %};
+            color: {% if time_of_day == "night" %}
+                white;
+            {% else %}
+                black;
+            {% endif %};
+        }
+    </style>       
 </head>
 <body>
-    <!-- Responsive navbar-->
-    {% cache 600 navbar request.user.is_authenticated %}
+
+    <!-- Навбар в кэше -->
+    {% cache 10 navbar LANGUAGE_CODE request.user.is_authenticated request.session.django_timezone time_of_day %}
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
         <div class="container">
-            <a class="navbar-brand" href="/news/">Доска объявлений</a>
+            <a class="navbar-brand" href="/news/">{% trans "News Portal" %}</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse"
-                    data-target="#navbarResponsive"
-                    aria-controls="navbarResponsive" aria-expanded="false"
-                    aria-label="Toggle navigation">
+                    data-target="#navbarResponsive" aria-controls="navbarResponsive"
+                    aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="nav nav-pills nav-fill" id="navbarResponsive">
-                <ul class="navbar-nav">
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     {% if request.user.is_authenticated %}
                         {% if is_author %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'user_news' %}">Мои объявления</a>
+                            <a class="nav-link" href="{% url 'user_news' %}">{% trans "My publications" %}</a>
                         </li>
                         {% endif %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'news_search' %}">Поиск</a>
+                            <a class="nav-link" href="{% url 'news_search' %}">{% trans "Search" %}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Отклики</a>
+                            <a class="nav-link" href="#">{% trans "Responses" %}</a>
                         </li>
                     {% endif %}
                 </ul>
-                <ul class="nav justify-content-end">
+
+                <ul class="navbar-nav ms-auto d-flex align-items-center">
+                    <!-- Language switcher -->
+                    <li class="nav-item me-2">
+                        <form action="{% url 'set_language' %}" method="POST" class="d-flex align-items-center">
+                            {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                            {% get_available_languages as LANGUAGES %}
+                            {% get_language_info_list for LANGUAGES as languages %}
+                            <select name="language" class="form-select form-select-sm me-2" style="width: auto;">
+                                {% for language in languages %}
+                                    <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
+                                        {{ language.name_local }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="btn btn-sm btn-outline-light">{% trans "Apply" %}</button>
+                        </form>
+                    </li>
+                    <!-- Timezone switcher -->
+                    <li class="nav-item me-2">
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <label for="timezone">Time zone:</label>
+                            <select name="timezone">
+                                {% for tz in timezones %}
+                                <option value="{{ tz }}"{% if tz == TIME_ZONE %} selected{% endif %}> {{ tz }} </option>
+                                {% endfor %}
+                            </select>
+                            <input type="submit" value="Set">
+                        </form>
+                    </li>
+
                     {% if request.user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="btn btn-outline-primary" href="{% url 'accounts:logout' %}">Выход</a>
+                        <a class="btn btn-outline-primary" href="{% url 'accounts:logout' %}">{% trans "Logout" %}</a>
                     </li>
                     {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'account_signup' %}">Регистрация</a>
+                    <li class="nav-item me-2">
+                        <a class="nav-link" href="{% url 'account_signup' %}">{% trans "Sign Up" %}</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'account_login' %}">Вход</a>
+                    <li class="nav-item me-2">
+                        <a class="nav-link active" href="{% url 'account_login' %}">{% trans "Log In" %}</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -61,7 +106,7 @@
     </nav>
     {% endcache %}
 
-    <!-- Page content-->
+    <!-- Контент -->
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
@@ -73,3 +118,4 @@
     </div>
 </body>
 </html>
+пше ы

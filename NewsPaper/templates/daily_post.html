@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Еженедельная подборка новостей</title>
+    <title>Weekly news selection</title>
 </head>
 <body>
-<h2>Здравствуйте!</h2>
-<p>Мы подготовили для вас подборку новых статей, опубликованных за последнюю неделю:</p>
+<h2>Hello!</h2>
+<p>We have prepared for you a selection of new articles published over the past week:</p>
 <hr>
 
 <ul>
@@ -14,13 +14,13 @@
   <li>
     <strong><a href="{{ link }}{{ post.get_absolute_url }}">{{ post.title }}</a></strong>
     <br>
-    <small>Дата публикации: {{ post.date_creation|date:"d M Y" }}</small>
+    <small>"Date of publication:" {{ post.date_creation|date:"d M Y" }}</small>
   </li>
   {% endfor %}
 </ul>
 
 <hr>
 
-<p>С уважением, команда новостного портала</p>
+<p>Best regards, the News Portal team</p>
 </body>
 </html>

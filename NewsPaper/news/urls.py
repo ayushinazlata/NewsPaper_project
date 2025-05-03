@@ -5,7 +5,7 @@ from django.views.decorators.cache import cache_page
 
 
 urlpatterns = [
-    path('', cache_page(60)(NewsList.as_view()), name='news_list'),
+    path('', NewsList.as_view(), name='news_list'),
     path('<int:pk>/', cache_page(60 * 5)(NewList.as_view()), name='new_detail'),
     path('search/', NewsSearch.as_view(), name='news_search'),
     path('create/', NewsCreate.as_view(), name='news_create'),

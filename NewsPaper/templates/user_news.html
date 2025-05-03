@@ -1,19 +1,19 @@
-<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
 {% extends 'flatpages/default.html' %}
+{% load i18n %}
 
 {% block title %}
-Мои объявления
+    {% trans "My publications" %}
 {% endblock title %}
 
 {% block content %}
-<h1 style="text-align: center; margin-bottom: 20px;">◄ Мои объявления ►</h1>
-<h6 style="text-align: center; color: #555;"><i>На странице отображено {{user_news|length}} из {{paginator.count}} объявлений</i></h6>
+<h1 style="text-align: center; margin-bottom: 20px;">◄ {% trans "MY PUBLICATIONS" %} ►</h1>
+<h6 style="text-align: center; color: #555;"><i>{% trans "You see" %} {{user_news|length}} {% trans "of" %} {{paginator.count}} {% trans "your publications" %}</i></h6>
 
 <hr style="margin: 20px 0;">
 
 <form action="" method="get">
    {{ filterset.form.as_p }}
-   <input type="submit" value="Найти" />
+   <input type="submit" value="{% trans 'Search' %}" />
 </form>
 <hr>
 
@@ -22,12 +22,12 @@
 <table border="1" cellpadding="10" cellspacing="0" width="100%" style="border-collapse: collapse; text-align: center;">
     <thead style="background-color: #f0f0f0; font-weight: bold;">
         <tr>
-            <td>Дата создания</td>
-            <td>Категория</td>
-            <td>Заголовок</td>
-            <td>Текст</td>
+            <td>{% trans "Date of publication" %}</td>
+            <td>{% trans "Category" %}</td>
+            <td>{% trans "Title" %}</td>
+            <td>{% trans "Content" %}</td>
             {% if perms.news.edit_post or perms.news.delete_post %}
-            <td>Действия</td>
+            <td>{% trans "Actions" %}</td>
             {% endif %}
         </tr>
     </thead>
@@ -48,12 +48,12 @@
             <td>
                 {% if perms.news.edit_post %}
                 <form action="{% url 'new_edit' pk=new.id %}" method="get">
-                    <input type="submit" value="Редактировать" />
+                    <input type="submit" value="{% trans 'Edit' %}" />
                 </form>
                 {% endif %}
                 {% if perms.news.delete_post %}
                 <form action="{% url 'new_delete' new.id %}" method="get">
-                    <input type="submit" value="Удалить" />
+                    <input type="submit" value="{% trans 'Delete' %}" />
                 </form>
                 {% endif %}
             </td>
@@ -62,7 +62,7 @@
 </table>
 {% else %}
 <div style="text-align: center; padding: 20px; border: 1px solid #ccc; background-color: #f9f9f9;">
-    <h2>Объявлений не найдено 😔</h2>
+    <h2>{% trans "No publications find" %} 😔</h2>
 </div>
 {% endif %}
 
@@ -90,6 +90,6 @@
    {% endif %}
 
 <hr>
-<a href="{% url 'news_list' %}" class="btn btn-secondary">← Назад на главную</a>
+<a href="{% url 'news_list' %}" class="btn btn-secondary">← {% trans "See all publications" %}</a>
 
 {% endblock content %}

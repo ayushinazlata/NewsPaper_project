@@ -1,19 +1,20 @@
 {% extends 'flatpages/default.html' %}
+{% load i18n %}
 
 {% load custom_filters %}
 
 {% block title %}
-    Поиск публикаций
+    {% trans "Searching publications" %}
 {% endblock title %}
 
 {% block content %}
-<h1 style="text-align: center; margin-bottom: 20px;">◄ ПОИСК ПУБЛИКАЦИЙ ►</h1>
-<h6 style="text-align: center; color: #555;"><i>Вы видите {{ news|length }} из {{ paginator.count }} публикаций на нашем Новостном портале!</i></h6>
+<h1 style="text-align: center; margin-bottom: 20px;">◄ {% trans "SEARCHING PUBLICATIONS" %} ►</h1>
+<h6 style="text-align: center; color: #555;"><i>{% trans "You see" %} {{ news|length }} {% trans "of" %} {{ paginator.count }} {% trans "publications on our News Portal!" %}</i></h6>
 <hr style="margin: 20px 0;">
 
 <form method="get">
     {{ filterset.form.as_p }}
-    <button type="submit">Искать</button>
+    <button type="submit">{% trans "Search" %}</button>
 </form>
 
 <hr>
@@ -22,11 +23,11 @@
 <table border="1" cellpadding="10" cellspacing="0" width="100%" style="border-collapse: collapse; text-align: center;">
     <thead style="background-color: #f0f0f0; font-weight: bold;">
         <tr>
-            <th>Тип</th>
-            <th>Заголовок</th>
-            <th>Дата</th>
-            <th>Текст</th>
-            <th>Категория</th>
+            <th>{% trans "Type" %}</th>
+            <th>{% trans "Title" %}</th>
+            <th>{% trans "Date of publication" %}</th>
+            <th>{% trans "Content" %}</th>
+            <th>{% trans "Category" %}</th>
         </tr>
     </thead>
         {% for new in news %}
@@ -47,7 +48,7 @@
 </table>
 {% else %}
 <div style="text-align: center; padding: 20px; border: 1px solid #ccc; background-color: #f9f9f9;">
-    <h2>Публикации не найдены 😔</h2>
+    <h2>{% trans "No publications found" %} 😔</h2>
 </div>
 {% endif %}
 
@@ -73,6 +74,6 @@
 {% endif %}
 
 <hr>
-<a href="{% url 'news_list' %}" class="btn btn-secondary">← Назад на главную</a>
+<a href="{% url 'news_list' %}" class="btn btn-secondary">← {% trans "See all publications" %}</a>
 
 {% endblock content %}

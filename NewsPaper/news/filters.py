@@ -1,13 +1,14 @@
 from django_filters import FilterSet, ModelChoiceFilter, DateFilter, CharFilter
 from django.forms import DateInput
-from .models import Post, Author, Category
+from .models import Post, Author, Category 
+from django.utils.translation import gettext_lazy as _
 
 
 class PostFilter(FilterSet):
     title = CharFilter(
         field_name='title',
         lookup_expr='icontains',
-        label='По названию'
+        label=_('By name')
     )
 
     def __init__(self, *args, **kwargs):
@@ -22,14 +23,14 @@ class PostFilter(FilterSet):
     author = ModelChoiceFilter(
         field_name='author',
         queryset=Author.objects.none(), 
-        label='Автор',
-        empty_label='Выберите автора'
+        label=_('Author'),
+        empty_label=_('select author')
     )
 
     date_creation_after = DateFilter(
         field_name='date_creation',
         lookup_expr='gte',
-        label='Дата публикации после',
+        label=_('Publication date after'),
         widget=DateInput(attrs={'type': 'date'})
     )
 
@@ -43,13 +44,13 @@ class UserNewsFilter(FilterSet):
     category = ModelChoiceFilter(
         field_name='post_category',
         queryset=Category.objects.all(),
-        label=('Категория'),
-        empty_label=('выберите категорию'),
+        label=_('Category'),
+        empty_label=_('select category'),
     )
 
     date_creation_after = DateFilter(
         field_name='date_creation',
-        label=('Публикации от'),
+        label=_('Publications from'),
         lookup_expr='gt',
         widget=DateInput(
             format='%Y-%m-%dT',

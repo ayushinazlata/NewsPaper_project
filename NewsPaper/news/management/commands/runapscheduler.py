@@ -47,7 +47,7 @@ def my_job():
                 )
 
                 msg = EmailMultiAlternatives(
-                    subject=f'Новые статьи в категории: {category.name_category}',
+                    subject=f'New publications in category: {category.name_category}',
                     body='',
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     to=[subscriber.email],

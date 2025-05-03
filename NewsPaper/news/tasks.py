@@ -1,3 +1,4 @@
+from django.utils.translation import gettext_lazy as _
 from celery import shared_task
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
@@ -22,7 +23,7 @@ def send_notifications(preview, pk, title, subscribers, category):
         )
 
         msg = EmailMultiAlternatives(
-            subject=f'Новая публикация в категории "{category}"',
+            subject=f'New publication in category "{category}"',
             body='', 
             from_email=settings.DEFAULT_FROM_EMAIL,
             to=[email],
@@ -49,7 +50,7 @@ def notify_weekly():
     )
 
     msg = EmailMultiAlternatives(
-        subject='Все публикации за прошедшую неделю',
+        subject='All publications for the past week',
         body='',
         from_email=settings.DEFAULT_FROM_EMAIL,
         to=list(subscribers),

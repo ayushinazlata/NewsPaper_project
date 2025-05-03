@@ -1,22 +1,23 @@
 {% extends 'flatpages/default.html' %}
+{% load i18n %}
 
 {% load socialaccount %} 
 
 {% block content %}
 
-<h2>Вход в систему</h2>
+<h2>{% trans "Log In" %}</h2>
 
 <form method="post" action="{% url 'account_login' %}">
 {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Войти">
+    <input type="submit" value="{% trans 'Log in' %}">
     <input type="hidden" name="next" value="{{ next }}">
 </form>
 
 <!-- Кнопка для входа через социальные сети, например, Яндекс -->
-<h3>Или войдите через:</h3>
+<h3>{% trans 'Or sign in from:' %}</h3>
 <ul>
-    <li><a href="{% provider_login_url 'yandex' %}">Войти через Яндекс</a></li>
+    <li><a href="{% provider_login_url 'yandex' %}">{% trans 'Login from Yandex' %}</a></li>
 </ul>
 
 {% endblock %}

@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.models import Group
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -11,6 +12,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
+import pytz
 
 
 class NewsList(ListView):
@@ -23,16 +25,25 @@ class NewsList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        user = self.request.user
-        context['is_author'] = user.is_authenticated and user.groups.filter(name='authors').exists()
+        # Считываем выбранный часовой пояс из сессии или по умолчанию UTC
+        timezone_name = self.request.session.get('django_timezone', 'UTC')
+        timezone.activate(pytz.timezone(timezone_name))  # Активируем часовой пояс
+        current_time = timezone.now()  # Получаем текущее время в активированном часовом поясе
+
+        # Делаем проверку времени для смены фона
+        time_of_day = "day" if 7 <= current_time.hour < 19 else "night"
+
+        context['is_author'] = self.request.user.is_authenticated and self.request.user.groups.filter(name='authors').exists()
+        context['current_time'] = current_time  # Добавляем время в контекст
+        context['time_of_day'] = time_of_day  # Добавляем информацию о времени суток
         context['date_creation'] = datetime.utcnow()
 
-        if user.is_authenticated and context['is_author']:
+        if self.request.user.is_authenticated and context['is_author']:
             limit = settings.DAY_LIMIT_POSTS
             prev_day = timezone.now() - timedelta(hours=24)
             posts_day_count = Post.objects.filter(
                 date_creation__gte=prev_day,
-                author__authorUser=user
+                author__authorUser=self.request.user
             ).count()
 
             context.update({
@@ -43,7 +54,16 @@ class NewsList(ListView):
         else:
             context.update({'limit': 0, 'count': 0, 'posts_limit': False})
 
+        context['timezones'] = pytz.common_timezones  # Добавляем список всех часовых поясов
+
         return context
+
+    def post(self, request):
+        timezone_name = request.POST.get('timezone', 'UTC')
+        if timezone_name in pytz.common_timezones:
+            request.session['django_timezone'] = timezone_name
+            timezone.activate(pytz.timezone(timezone_name))
+        return redirect(request.path) 
 
 
 class NewList(DetailView):
@@ -84,7 +104,16 @@ class UserNewsListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        # Считываем выбранный часовой пояс из сессии
+        timezone_name = self.request.session.get('django_timezone', 'UTC')
+        timezone.activate(pytz.timezone(timezone_name))  # Активируем часовой пояс
+        current_time = timezone.now()  # Получаем текущее время
+
         context['filterset'] = self.filterset
+        context['timezones'] = pytz.common_timezones  # Все доступные часовые пояса
+        context['current_time'] = current_time  # Добавляем в контекст текущее время
+
         return context
 
 
@@ -104,6 +133,15 @@ class NewsSearch(ListView):
         context = super().get_context_data(**kwargs)
         context['filterset'] = self.filterset
         context['is_author'] = self.request.user.is_authenticated and self.request.user.groups.filter(name='authors').exists()
+        
+        # Считываем выбранный часовой пояс из сессии
+        timezone_name = self.request.session.get('django_timezone', 'UTC')
+        timezone.activate(pytz.timezone(timezone_name))  # Активируем часовой пояс
+        current_time = timezone.now()  # Получаем текущее время
+
+        context['timezones'] = pytz.common_timezones  # Все доступные часовые пояса
+        context['current_time'] = current_time  # Добавляем в контекст текущее время
+
         return context
 
 
@@ -121,7 +159,7 @@ class NewsCreate(PermissionRequiredMixin, CreateView):
 
 
 class NewsEdit(PermissionRequiredMixin, UpdateView):
-    permission_required = ('news.change_post',)  # исправил на корректное право
+    permission_required = ('news.change_post',)  
     form_class = NewsForm
     model = Post
     template_name = 'new_edit.html'
@@ -149,7 +187,7 @@ def upgrade_user(request):
 def subscribe(request, pk):
     category = get_object_or_404(Category, id=pk)
     category.subscribers.add(request.user)
-    message = 'Вы успешно подписались на обновления категории:'
+    message = _('You have successfully subscribed to category updates:')
     return render(request, 'subscribe.html', {'category': category, 'message': message})
 
 
@@ -157,7 +195,7 @@ def subscribe(request, pk):
 def delete_subscribe(request, pk):
     category = get_object_or_404(Category, id=pk)
     category.subscribers.remove(request.user)
-    message = 'Вы успешно отписались от обновлений в категории:'
+    message = _('You have successfully unsubscribed from updates in the category:')
     return render(request, 'delete_subscribe.html', {'category': category, 'message': message})
 
 
@@ -177,10 +215,17 @@ class CategoryList(ListView):
         context = super().get_context_data(**kwargs)
         user = self.request.user
 
+        # Считываем выбранный часовой пояс из сессии
+        timezone_name = self.request.session.get('django_timezone', 'UTC')
+        timezone.activate(pytz.timezone(timezone_name))  # Активируем часовой пояс
+        current_time = timezone.now()  # Получаем текущее время
+
         context.update({
             'category': self.post_category,
             'filterset': self.filterset,
             'is_not_subscriber': user.is_authenticated and user not in self.post_category.subscribers.all(),
             'is_author': user.is_authenticated and user.groups.filter(name='authors').exists(),
+            'timezones': pytz.common_timezones,  # Все доступные часовые пояса
+            'current_time': current_time  # Добавляем текущее время в контекст
         })
         return context
