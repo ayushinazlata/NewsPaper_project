@@ -1,7 +1,13 @@
-from django.urls import path
+from django.urls import path, include
 from .views import (NewsList, NewList, NewsSearch, NewsCreate, NewsEdit, NewsDelete, UserNewsListView, upgrade_user,
-                    CategoryList, subscribe, delete_subscribe)
+                    CategoryList, subscribe, delete_subscribe, NewsViewSet, ArticleViewSet)
 from django.views.decorators.cache import cache_page
+from rest_framework.routers import DefaultRouter
+
+
+router = DefaultRouter()
+router.register(r'news', NewsViewSet, basename='news')
+router.register(r'articles', ArticleViewSet, basename='articles')
 
 
 urlpatterns = [
@@ -15,5 +21,7 @@ urlpatterns = [
     path('upgrade/', upgrade_user, name='upgrade_user'),
     path('categories/<int:pk>/', CategoryList.as_view(), name='category_news'),
     path('categories/<int:pk>/subscribe', subscribe, name='subscribe'),
-    path('categories/<int:pk>/unsubscribe', delete_subscribe, name='delete_subscribe'),  
+    path('categories/<int:pk>/unsubscribe', delete_subscribe, name='delete_subscribe'),
+    # API для новостей и статей
+    path('', include(router.urls)),
 ]

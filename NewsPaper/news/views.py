@@ -3,9 +3,12 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.models import Group
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+import django_filters
 from .forms import NewsForm
 from .models import Post, Author, Category
 from .filters import PostFilter, UserNewsFilter
+from rest_framework import viewsets, permissions
+from .serializers import PostSerializer
 from django.shortcuts import redirect, render, get_object_or_404
 from datetime import datetime, timedelta
 from django.urls import reverse_lazy
@@ -310,3 +313,33 @@ class CategoryList(ListView):
             'current_time': current_time  # Добавляем текущее время в контекст
         })
         return context
+
+
+class NewsViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.filter(publication='NW')
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+    filterset_fields = ["post_category", "author",]
+    
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user, publication='NW')
+
+    def perform_update(self, serializer):
+        serializer.save(author=self.request.user, publication='NW')
+
+
+class ArticleViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.filter(publication='AR')
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+    filterset_fields = ["post_category", "author",]
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user, publication='AR')
+
+    def perform_update(self, serializer):
+        serializer.save(author=self.request.user, publication='AR')
